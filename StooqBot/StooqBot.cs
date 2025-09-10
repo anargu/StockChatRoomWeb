@@ -31,14 +31,14 @@ namespace StooqBot
         }
 
 
-    static async Task Main(string[] args)
-    {
-        var bot = new StooqBot();
-        Console.Write("Enter stock symbol: ");
-        string symbol = Console.ReadLine();
-
-        string result = await bot.ExecuteRequest(symbol);
-        Console.WriteLine("\nResult:\n" + result);
-    }
+        // Demo using command line
+        // static async Task Main(string[] args)
+        // {
+        //     var bot = new StooqBot();
+        //     Console.Write("Enter stock symbol: ");
+        //     string symbol = Console.ReadLine();
+        //     string result = await bot.ExecuteRequest(symbol);
+        //     Console.WriteLine("\nResult:\n" + result);
+        // }
     }
 }
