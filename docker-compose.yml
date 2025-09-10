@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15
+    container_name: stockchat-postgres
+    environment:
+      POSTGRES_DB: ChatSystemDb
+      POSTGRES_USER: stockuser
+      POSTGRES_PASSWORD: chatpassword123
+      POSTGRES_INITDB_ARGS: --encoding=UTF-8
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+    networks:
+      - stockchat-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U stockuser -d ChatSystemDb"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  stockchat-network:
+    driver: bridge
