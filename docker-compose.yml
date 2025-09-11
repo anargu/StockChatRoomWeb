@@ -71,7 +71,7 @@ services:
       - ASPNETCORE_URLS=http://+:8080
       - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=ChatSystemDb;Username=stockuser;Password=chatpassword123
       - ConnectionStrings__RabbitMQ=amqp://guest:guest@rabbitmq:5672/
-      - JWT__Secret=your-256-bit-secret-key-here-must-be-very-long-for-security-purposes
+      - JWT__Secret=TheDarkKnightRisesInTheDarknessWithJusticeAndHonor256
       - JWT__Issuer=StockChatRoomWeb
       - JWT__Audience=StockChatRoomWebUsers
     ports:
