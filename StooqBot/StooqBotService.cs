@@ -105,7 +105,8 @@ public class StooqBotService : BackgroundService
             {
                 // Parse CSV data to extract price
                 var price = _stockDataParser.ParsePriceFromCsv(rawData);
-                var formattedMessage = $"The quote for {request.StockSymbol.ToUpperInvariant()} is ${price:F2} per share.";
+
+                var formattedMessage = $"La cotización para {request.StockSymbol.ToUpperInvariant()} es ${price:F2} por acción.";
 
                 response = new StockResponseMessage
                 {

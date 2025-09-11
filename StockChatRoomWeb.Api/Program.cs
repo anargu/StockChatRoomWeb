@@ -121,8 +121,12 @@ app.UseCors();
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.UseStaticFiles();
+
 app.MapControllers();
 app.MapHub<ChatHub>("/chatHub");
+
+app.MapFallbackToFile("index.html");
 
 // Database migration and seeding
 using (var scope = app.Services.CreateScope())

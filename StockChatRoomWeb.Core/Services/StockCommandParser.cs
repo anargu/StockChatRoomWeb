@@ -42,6 +42,6 @@ public static class StockCommandParser
             return errorMessage ?? $"Sorry, I couldn't find stock information for {symbol.ToUpperInvariant()}.";
         }
 
-        return $"The quote for {symbol.ToUpperInvariant()} is ${price.Value:F2} per share.";
+        return $"La cotización para {symbol.ToUpperInvariant()} es ${price.Value:F2} por acción.";
     }
 }
