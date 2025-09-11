@@ -46,6 +46,24 @@ services:
       retries: 3
     restart: unless-stopped
 
+  # StooqBot Service
+  stooq-bot:
+    build:
+      context: .
+      dockerfile: StooqBot/Dockerfile
+    container_name: stooq-bot
+    environment:
+      - RabbitMQ__Host=rabbitmq
+      - RabbitMQ__Port=5672
+      - RabbitMQ__Username=guest
+      - RabbitMQ__Password=guest
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - stockchat-network
+    restart: unless-stopped
+
 volumes:
   postgres_data:
     driver: local
