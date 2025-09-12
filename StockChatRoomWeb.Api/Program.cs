@@ -97,6 +97,7 @@ builder.Services.AddCors(options =>
 // Repository Services
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IChatMessageRepository, ChatMessageRepository>();
+builder.Services.AddScoped<IChatRoomRepository, ChatRoomRepository>();
 
 // Application Services
 builder.Services.AddScoped<IAuthService, AuthService>();

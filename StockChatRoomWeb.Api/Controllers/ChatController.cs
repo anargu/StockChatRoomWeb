@@ -34,11 +34,11 @@ public class ChatController : ControllerBase
     }
 
     [HttpGet("messages")]
-    public async Task<ActionResult<ApiResponse<List<ChatMessageDto>>>> GetRecentMessages()
+    public async Task<ActionResult<ApiResponse<List<ChatMessageDto>>>> GetRecentMessages([FromQuery] Guid? chatRoomId = null, [FromQuery] int count = ChatConstants.MaxMessagesCount)
     {
         try
         {
-            var messages = await _chatService.GetRecentMessagesAsync(ChatConstants.MaxMessagesCount);
+            var messages = await _chatService.GetRecentMessagesAsync(chatRoomId, count);
             return Ok(ApiResponse<List<ChatMessageDto>>.SuccessResult(messages));
         }
         catch (Exception ex)
@@ -96,11 +96,21 @@ public class ChatController : ControllerBase
             else
             {
                 // Regular message - save to database
-                message = await _chatService.SendMessageAsync(userId, request.Content);
+                message = await _chatService.SendMessageAsync(userId, request.Content, request.ChatRoomId);
             }
 
-            // Broadcast message to all connected clients
-            await _hubContext.Clients.Group(ChatConstants.ChatRoomName).SendAsync("ReceiveMessage", message);
+            // Broadcast message to Chat Room
+            string targetGroup;
+            if (request.ChatRoomId.HasValue)
+            {
+                targetGroup = $"{ChatConstants.RoomGroupPrefix}{request.ChatRoomId}";
+            }
+            else
+            {
+                targetGroup = ChatConstants.ChatRoomName; // Global chat
+            }
+
+            await _hubContext.Clients.Group(targetGroup).SendAsync("ReceiveMessage", message);
 
             return Ok(ApiResponse<ChatMessageDto>.SuccessResult(message, "Message sent successfully"));
         }

@@ -54,7 +54,7 @@ public class ChatHub : Hub
         await Groups.AddToGroupAsync(Context.ConnectionId, ChatConstants.ChatRoomName);
         
         var username = Context.User?.FindFirst(ClaimTypes.Name)?.Value ?? "Unknown";
-        _logger.LogInformation("User {Username} explicitly joined chat room", username);
+        _logger.LogInformation("User {Username} explicitly joined global chat room", username);
     }
 
     public async Task LeaveChatRoom()
@@ -62,6 +62,24 @@ public class ChatHub : Hub
         await Groups.RemoveFromGroupAsync(Context.ConnectionId, ChatConstants.ChatRoomName);
         
         var username = Context.User?.FindFirst(ClaimTypes.Name)?.Value ?? "Unknown";
-        _logger.LogInformation("User {Username} left chat room", username);
+        _logger.LogInformation("User {Username} left global chat room", username);
+    }
+
+    public async Task JoinRoom(string roomId)
+    {
+        var groupName = $"{ChatConstants.RoomGroupPrefix}{roomId}";
+        await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
+        
+        var username = Context.User?.FindFirst(ClaimTypes.Name)?.Value ?? "Unknown";
+        _logger.LogInformation("User {Username} joined room {RoomId}", username, roomId);
+    }
+
+    public async Task LeaveRoom(string roomId)
+    {
+        var groupName = $"{ChatConstants.RoomGroupPrefix}{roomId}";
+        await Groups.RemoveFromGroupAsync(Context.ConnectionId, groupName);
+        
+        var username = Context.User?.FindFirst(ClaimTypes.Name)?.Value ?? "Unknown";
+        _logger.LogInformation("User {Username} left room {RoomId}", username, roomId);
     }
 }

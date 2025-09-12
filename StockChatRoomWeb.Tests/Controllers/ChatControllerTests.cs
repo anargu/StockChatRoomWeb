@@ -144,7 +144,7 @@ public class ChatControllerTests
         _mockChatService.Setup(x => x.IsStockCommandAsync(regularMessage))
             .ReturnsAsync(false);
 
-        _mockChatService.Setup(x => x.SendMessageAsync(_testUserId, regularMessage))
+        _mockChatService.Setup(x => x.SendMessageAsync(_testUserId, regularMessage, null))
             .ReturnsAsync(regularMessageDto);
 
         // Function to test
@@ -164,7 +164,7 @@ public class ChatControllerTests
         Assert.Equal(MessageType.Normal, response.Data.MessageType);
 
         // Verify regular message flow - should save to database
-        _mockChatService.Verify(x => x.SendMessageAsync(_testUserId, regularMessage), Times.Once);
+        _mockChatService.Verify(x => x.SendMessageAsync(_testUserId, regularMessage, null), Times.Once);
         
         // Verify regular message flow - should NOT use stock command methods
         _mockChatService.Verify(x => x.CreateStockCommandDisplayAsync(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
