@@ -4,3 +4,9 @@
   "password": "nanana",
   "confirmPassword": "nanana"
 }
+{
+  "username": "blackpanther",
+  "email": "black@panther.com",
+  "password": "w4k4nd4",
+  "confirmPassword": "w4k4nd4"
+}
