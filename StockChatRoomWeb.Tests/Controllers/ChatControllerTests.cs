@@ -90,7 +90,7 @@ public class ChatControllerTests
         _mockChatService.Setup(x => x.IsStockCommandAsync(stockCommand))
             .ReturnsAsync(true);
 
-        _mockChatService.Setup(x => x.CreateStockCommandDisplayAsync(_testUserId, stockCommand))
+        _mockChatService.Setup(x => x.CreateStockCommandDisplayAsync(_testUserId, stockCommand, null))
             .ReturnsAsync(stockCommandDto);
 
         _mockChatService.Setup(x => x.ExtractStockSymbolAsync(stockCommand))
@@ -118,7 +118,7 @@ public class ChatControllerTests
         _mockChatService.Verify(x => x.SendMessageAsync(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
         
         // Verify stock command flow - should create display DTO and publish request
-        _mockChatService.Verify(x => x.CreateStockCommandDisplayAsync(_testUserId, stockCommand), Times.Once);
+        _mockChatService.Verify(x => x.CreateStockCommandDisplayAsync(_testUserId, stockCommand, null), Times.Once);
         _mockChatService.Verify(x => x.ExtractStockSymbolAsync(stockCommand), Times.Once);
         _mockMessageBrokerService.Verify(x => x.PublishStockRequestAsync(It.IsAny<StockRequestMessage>()), Times.Once);
     }
@@ -167,7 +167,7 @@ public class ChatControllerTests
         _mockChatService.Verify(x => x.SendMessageAsync(_testUserId, regularMessage, null), Times.Once);
         
         // Verify regular message flow - should NOT use stock command methods
-        _mockChatService.Verify(x => x.CreateStockCommandDisplayAsync(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+        _mockChatService.Verify(x => x.CreateStockCommandDisplayAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Guid?>()), Times.Never);
         _mockChatService.Verify(x => x.ExtractStockSymbolAsync(It.IsAny<string>()), Times.Never);
         _mockMessageBrokerService.Verify(x => x.PublishStockRequestAsync(It.IsAny<StockRequestMessage>()), Times.Never);
     }

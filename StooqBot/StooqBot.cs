@@ -6,7 +6,7 @@ namespace StooqBot
     public class StooqBot
     {
         private const string BASE_URL = "https://stooq.com/q/l/?s=";
-        private const string URL_PARAMS = ".us&f=sd2t2ohlcv&h&e=csv";
+        private const string URL_PARAMS = "&f=sd2t2ohlcv&h&e=csv";
         private StooqApi stooqApi;
 
         public StooqBot()

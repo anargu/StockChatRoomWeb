@@ -101,6 +101,8 @@ public class StooqBotService : BackgroundService
 
             StockResponseMessage response;
 
+            _logger.LogInformation("Stooq Raw Response:\n{rawData}\n", rawData);
+
             if (_stockDataParser.IsValidStockData(rawData))
             {
                 // Parse CSV data to extract price
