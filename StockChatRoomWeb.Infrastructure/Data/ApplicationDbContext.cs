@@ -12,6 +12,7 @@ public class ApplicationDbContext : IdentityDbContext<User, IdentityRole<Guid>, 
     }
 
     public DbSet<ChatMessage> ChatMessages => Set<ChatMessage>();
+    public DbSet<ChatRoom> ChatRooms => Set<ChatRoom>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -45,6 +46,29 @@ public class ApplicationDbContext : IdentityDbContext<User, IdentityRole<Guid>, 
             entity.HasIndex(e => e.CreatedAt).IsDescending();
             entity.HasIndex(e => e.UserId);
             entity.HasIndex(e => e.MessageType);
+        });
+
+        builder.Entity<ChatRoom>(entity =>
+        {
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
+            entity.Property(e => e.Name).HasMaxLength(100);
+            entity.Property(e => e.CreatedAt).HasDefaultValueSql("NOW()");
+
+            // Relationships
+            entity.HasOne(e => e.User)
+                .WithMany(u => u.ChatRooms)
+                .HasForeignKey(e => e.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasMany(e => e.ChatMessages)
+                .WithOne(m => m.ChatRoom)
+                .HasForeignKey(m => m.ChatRoomId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .IsRequired(false);
+
+            // Indexes
+            entity.HasIndex(e => e.CreatedAt).IsDescending();
+            entity.HasIndex(e => e.UserId);
         });
 
         // Identity tables

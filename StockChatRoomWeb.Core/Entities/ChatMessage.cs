@@ -21,6 +21,9 @@ public class ChatMessage
     [Required]
     public Guid UserId { get; set; }
 
+    // INFO: For Demo Purpose Only - Null ChatRoomId means Global Chat
+    public Guid? ChatRoomId { get; set; }
+
     public bool IsFromBot { get; set; }
 
     public MessageType MessageType { get; set; } = MessageType.Normal;
@@ -29,4 +32,7 @@ public class ChatMessage
 
     // Navigation properties
     public virtual User User { get; set; } = null!;
+
+    // Navigation properties
+    public virtual ChatRoom? ChatRoom { get; set; }
 }
