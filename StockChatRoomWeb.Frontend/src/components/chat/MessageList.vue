@@ -8,14 +8,14 @@
         <LoadingSpinner size="sm" text="Loading messages..." />
       </div>
       
-      <div v-else-if="messages.length === 0" class="p-8 text-center text-gray-500">
-        <p class="text-lg mb-2">No messages yet</p>
+      <div v-else-if="currentRoomMessages.length === 0" class="p-8 text-center text-gray-500">
+        <p class="text-lg mb-2">No messages in {{ currentRoomName }} yet</p>
         <p class="text-sm">Start the conversation by sending a message!</p>
       </div>
       
       <div v-else class="divide-y divide-gray-100">
         <MessageItem
-          v-for="message in sortedMessages"
+          v-for="message in sortedCurrentRoomMessages"
           :key="message.id"
           :message="message"
         />
@@ -34,8 +34,12 @@ const chatStore = useChatStore()
 const messagesContainer = ref(null)
 
 const messages = computed(() => chatStore.messages)
-const sortedMessages = computed(() => chatStore.sortedMessages)
+const currentRoomMessages = computed(() => chatStore.currentRoomMessages)
+const sortedCurrentRoomMessages = computed(() => 
+  [...currentRoomMessages.value].sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
+)
 const isLoading = computed(() => chatStore.isLoading)
+const currentRoomName = computed(() => chatStore.currentRoomName)
 
 const scrollToBottom = async () => {
   await nextTick()
@@ -45,7 +49,15 @@ const scrollToBottom = async () => {
 }
 
 watch(
-  () => messages.value.length,
+  () => currentRoomMessages.value.length,
+  () => {
+    scrollToBottom()
+  }
+)
+
+// Also watch for room changes to scroll to bottom
+watch(
+  () => chatStore.currentRoomId,
   () => {
     scrollToBottom()
   }

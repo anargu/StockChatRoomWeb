@@ -1,5 +1,5 @@
 import { HubConnectionBuilder, LogLevel } from '@microsoft/signalr'
-import { STORAGE_KEYS } from '@/utils/constants'
+import { STORAGE_KEYS, SIGNALR_METHODS } from '@/utils/constants'
 
 export class SignalRService {
   constructor() {
@@ -42,15 +42,42 @@ export class SignalRService {
     console.log('SignalR connected successfully')
   }
 
+  // Message handling
   onReceiveMessage(callback) {
     if (this.connection) {
-      this.connection.on('ReceiveMessage', callback)
+      this.connection.on(SIGNALR_METHODS.RECEIVE_MESSAGE, callback)
     }
   }
 
   offReceiveMessage() {
     if (this.connection) {
-      this.connection.off('ReceiveMessage')
+      this.connection.off(SIGNALR_METHODS.RECEIVE_MESSAGE)
+    }
+  }
+
+  // Global chat room methods (backward compatibility)
+  async joinChatRoom() {
+    if (this.connection) {
+      await this.connection.invoke(SIGNALR_METHODS.JOIN_CHAT_ROOM)
+    }
+  }
+
+  async leaveChatRoom() {
+    if (this.connection) {
+      await this.connection.invoke(SIGNALR_METHODS.LEAVE_CHAT_ROOM)
+    }
+  }
+
+  // Specific room methods
+  async joinRoom(roomId) {
+    if (this.connection && roomId) {
+      await this.connection.invoke(SIGNALR_METHODS.JOIN_ROOM, roomId)
+    }
+  }
+
+  async leaveRoom(roomId) {
+    if (this.connection && roomId) {
+      await this.connection.invoke(SIGNALR_METHODS.LEAVE_ROOM, roomId)
     }
   }
 

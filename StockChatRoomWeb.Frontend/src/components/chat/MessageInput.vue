@@ -44,7 +44,11 @@
           <span>{{ connectionStatus }}</span>
         </div>
         
-        <span v-if="message.startsWith('/stock=')" class="text-blue-600">
+        <span class="text-blue-600">
+          {{ currentRoomName }}
+        </span>
+        
+        <span v-if="message.startsWith('/stock=')" class="text-green-600">
           Stock command detected
         </span>
       </div>
@@ -70,6 +74,7 @@ const message = ref('')
 const isConnected = computed(() => chatStore.isConnected)
 const isSending = computed(() => chatStore.isSending)
 const error = computed(() => chatStore.error)
+const currentRoomName = computed(() => chatStore.currentRoomName)
 
 const canSend = computed(() => 
   message.value.trim().length > 0 && 
