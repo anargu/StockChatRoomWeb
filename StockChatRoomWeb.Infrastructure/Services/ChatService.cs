@@ -93,7 +93,7 @@ public class ChatService : IChatService
     }
 
     // Stock Commands
-    public async Task<ChatMessageDto> CreateStockCommandDisplayAsync(string userId, string content)
+    public async Task<ChatMessageDto> CreateStockCommandDisplayAsync(string userId, string content, Guid? chatRoomId = null)
     {
         if (!Guid.TryParse(userId, out var userGuid))
             throw new ArgumentException("Invalid user ID", nameof(userId));
@@ -111,7 +111,8 @@ public class ChatService : IChatService
             UserId = userGuid,
             IsFromBot = false,
             MessageType = StockChatRoomWeb.Shared.DTOs.Chat.MessageType.StockCommand,
-            CreatedAt = DateTime.UtcNow
+            CreatedAt = DateTime.UtcNow,
+            ChatRoomId = chatRoomId
         };
     }
 

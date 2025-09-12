@@ -1,13 +1,12 @@
 using Microsoft.AspNetCore.SignalR;
 using StockChatRoomWeb.Api.Hubs;
 using StockChatRoomWeb.Core.Entities;
-using StockChatRoomWeb.Core.Enums;
 using StockChatRoomWeb.Core.Interfaces.Repositories;
-using StockChatRoomWeb.Core.Services;
 using StockChatRoomWeb.Shared.Constants;
 using StockChatRoomWeb.Shared.DTOs.Chat;
 using StockChatRoomWeb.Shared.DTOs.Stock;
 using StockChatRoomWeb.Shared.Interfaces.Services;
+using StockChatRoomWeb.Shared.Utils;
 
 namespace StockChatRoomWeb.Api.Services;
 
@@ -63,7 +62,8 @@ public class StockResponseBackgroundService : BackgroundService
                 UserId = botUser.Id,
                 IsFromBot = true,
                 MessageType = StockChatRoomWeb.Core.Enums.MessageType.StockResponse,
-                User = botUser
+                User = botUser,
+                ChatRoomId = response.ChatRoomId,
             };
 
             var savedMessage = await messageRepository.CreateAsync(botMessage);
@@ -77,9 +77,21 @@ public class StockResponseBackgroundService : BackgroundService
                 UserId = savedMessage.UserId,
                 IsFromBot = savedMessage.IsFromBot,
                 MessageType = StockChatRoomWeb.Shared.DTOs.Chat.MessageType.StockResponse,
-                CreatedAt = savedMessage.CreatedAt
+                CreatedAt = savedMessage.CreatedAt,
+                ChatRoomId = savedMessage.ChatRoomId
             };
 
+            if (response.ChatRoomId.HasValue)
+            {
+                var roomGroupName = ChatUtils.GetRoomGroupName(response.ChatRoomId.ToString());
+                // Broadcast to specific chat room
+                await _hubContext.Clients.Group(roomGroupName).SendAsync("ReceiveMessage", messageDto);
+            }
+            else
+            {
+                // Broadcast to global chat
+                await _hubContext.Clients.Group(ChatConstants.ChatRoomName).SendAsync("ReceiveMessage", messageDto);
+            }   
             // Broadcast to all connected clients
             await _hubContext.Clients.Group(ChatConstants.ChatRoomName).SendAsync("ReceiveMessage", messageDto);
 

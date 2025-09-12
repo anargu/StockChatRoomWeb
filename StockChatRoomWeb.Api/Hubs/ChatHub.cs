@@ -2,6 +2,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using StockChatRoomWeb.Shared.Constants;
+using StockChatRoomWeb.Shared.Utils;
 
 namespace StockChatRoomWeb.Api.Hubs;
 
@@ -67,7 +68,7 @@ public class ChatHub : Hub
 
     public async Task JoinRoom(string roomId)
     {
-        var groupName = $"{ChatConstants.RoomGroupPrefix}{roomId}";
+        var groupName = ChatUtils.GetRoomGroupName(roomId);
         await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
         
         var username = Context.User?.FindFirst(ClaimTypes.Name)?.Value ?? "Unknown";
@@ -76,7 +77,7 @@ public class ChatHub : Hub
 
     public async Task LeaveRoom(string roomId)
     {
-        var groupName = $"{ChatConstants.RoomGroupPrefix}{roomId}";
+        var groupName = ChatUtils.GetRoomGroupName(roomId);
         await Groups.RemoveFromGroupAsync(Context.ConnectionId, groupName);
         
         var username = Context.User?.FindFirst(ClaimTypes.Name)?.Value ?? "Unknown";

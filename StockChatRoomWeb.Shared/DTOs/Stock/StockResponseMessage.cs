@@ -9,4 +9,5 @@ public class StockResponseMessage
     public DateTime Timestamp { get; set; }
     public bool IsSuccess { get; set; }
     public string? ErrorMessage { get; set; }
+    public Guid? ChatRoomId { get; set; }
 }

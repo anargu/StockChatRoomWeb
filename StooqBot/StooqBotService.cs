@@ -111,6 +111,7 @@ public class StooqBotService : BackgroundService
                 response = new StockResponseMessage
                 {
                     RequestId = request.RequestId,
+                    ChatRoomId = request.ChatRoomId,
                     StockSymbol = request.StockSymbol,
                     Price = price,
                     FormattedMessage = formattedMessage,
@@ -126,6 +127,7 @@ public class StooqBotService : BackgroundService
                 response = new StockResponseMessage
                 {
                     RequestId = request.RequestId,
+                    ChatRoomId = request.ChatRoomId,
                     StockSymbol = request.StockSymbol,
                     Price = null,
                     FormattedMessage = $"Sorry, I couldn't find stock information for {request.StockSymbol.ToUpperInvariant()}.",
@@ -148,6 +150,7 @@ public class StooqBotService : BackgroundService
             var errorResponse = new StockResponseMessage
             {
                 RequestId = request.RequestId,
+                ChatRoomId = request.ChatRoomId,
                 StockSymbol = request.StockSymbol,
                 Price = null,
                 FormattedMessage = $"Sorry, there was an error retrieving stock information for {request.StockSymbol.ToUpperInvariant()}.",

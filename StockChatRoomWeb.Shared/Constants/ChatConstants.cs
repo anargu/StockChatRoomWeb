@@ -4,10 +4,10 @@ public static class ChatConstants
 {
     public const string StockCommandPrefix = "/stock=";
     public const string ChatRoomName = "GlobalChat";
-    public const string RoomGroupPrefix = "room-";
     public const string BotUsername = "StockBot";
     public const int MaxMessagesCount = 50;
-    
+    public const string RoomGroupPrefix = "room-";
+
     public static class RabbitMQ
     {
         public const string StockRequestsQueue = "stock.requests";

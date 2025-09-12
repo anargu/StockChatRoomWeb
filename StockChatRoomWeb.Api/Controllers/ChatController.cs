@@ -8,6 +8,7 @@ using StockChatRoomWeb.Shared.Constants;
 using StockChatRoomWeb.Shared.DTOs.Chat;
 using StockChatRoomWeb.Shared.DTOs.Stock;
 using StockChatRoomWeb.Shared.Interfaces.Services;
+using StockChatRoomWeb.Shared.Utils;
 
 namespace StockChatRoomWeb.Api.Controllers;
 
@@ -75,7 +76,7 @@ public class ChatController : ControllerBase
             if (await _chatService.IsStockCommandAsync(request.Content))
             {
                 // Create display DTO for stock command WITHOUT saving to database
-                message = await _chatService.CreateStockCommandDisplayAsync(userId, request.Content);
+                message = await _chatService.CreateStockCommandDisplayAsync(userId, request.Content, request.ChatRoomId);
                 
                 // Process the stock command
                 var stockSymbol = await _chatService.ExtractStockSymbolAsync(request.Content);
@@ -86,7 +87,8 @@ public class ChatController : ControllerBase
                         StockSymbol = stockSymbol,
                         RequestId = Guid.NewGuid(),
                         UserId = Guid.Parse(userId),
-                        Timestamp = DateTime.UtcNow
+                        Timestamp = DateTime.UtcNow,
+                        ChatRoomId = request.ChatRoomId
                     };
 
                     await _messageBrokerService.PublishStockRequestAsync(stockRequest);
@@ -103,7 +105,7 @@ public class ChatController : ControllerBase
             string targetGroup;
             if (request.ChatRoomId.HasValue)
             {
-                targetGroup = $"{ChatConstants.RoomGroupPrefix}{request.ChatRoomId}";
+                targetGroup = ChatUtils.GetRoomGroupName(request.ChatRoomId?.ToString());
             }
             else
             {
