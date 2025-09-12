@@ -23,8 +23,14 @@ public class ChatMessageRepository : IChatMessageRepository
 
     public async Task<List<ChatMessage>> GetRecentMessagesAsync(int count = 50)
     {
+        return await GetRecentMessagesAsync(null, count); // Global chat
+    }
+
+    public async Task<List<ChatMessage>> GetRecentMessagesAsync(Guid? chatRoomId, int count = 50)
+    {
         return await _context.ChatMessages
             .Include(m => m.User)
+            .Where(m => m.ChatRoomId == chatRoomId)
             .OrderByDescending(m => m.CreatedAt)
             .Take(count)
             .OrderBy(m => m.CreatedAt)

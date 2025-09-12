@@ -9,6 +9,7 @@ public class ChatMessageDto
     public bool IsFromBot { get; set; }
     public MessageType MessageType { get; set; }
     public DateTime CreatedAt { get; set; }
+    public Guid? ChatRoomId { get; set; }
 }
 
 public enum MessageType

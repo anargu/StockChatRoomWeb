@@ -3,7 +3,8 @@ namespace StockChatRoomWeb.Shared.Constants;
 public static class ChatConstants
 {
     public const string StockCommandPrefix = "/stock=";
-    public const string ChatRoomName = "ChatRoom";
+    public const string ChatRoomName = "GlobalChat";
+    public const string RoomGroupPrefix = "room-";
     public const string BotUsername = "StockBot";
     public const int MaxMessagesCount = 50;
     
