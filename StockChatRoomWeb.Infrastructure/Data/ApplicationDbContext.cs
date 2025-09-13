@@ -46,6 +46,17 @@ public class ApplicationDbContext : IdentityDbContext<User, IdentityRole<Guid>, 
             entity.HasIndex(e => e.CreatedAt).IsDescending();
             entity.HasIndex(e => e.UserId);
             entity.HasIndex(e => e.MessageType);
+            
+            // Composite indexes for performance optimization
+            entity.HasIndex(e => new { e.ChatRoomId, e.CreatedAt })
+                .IsDescending(false, true) // ChatRoomId ASC, CreatedAt DESC
+                .HasDatabaseName("IX_ChatMessages_ChatRoomId_CreatedAt");
+                
+            // Partial index for global chat (ChatRoomId IS NULL)
+            entity.HasIndex(e => e.CreatedAt)
+                .IsDescending()
+                .HasDatabaseName("IX_ChatMessages_GlobalChat_CreatedAt")
+                .HasFilter("\"ChatRoomId\" IS NULL");
         });
 
         builder.Entity<ChatRoom>(entity =>
