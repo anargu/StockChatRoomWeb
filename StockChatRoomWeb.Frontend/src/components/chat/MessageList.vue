@@ -33,11 +33,12 @@ import LoadingSpinner from '@/components/ui/LoadingSpinner.vue'
 const chatStore = useChatStore()
 const messagesContainer = ref(null)
 
-const messages = computed(() => chatStore.messages)
 const currentRoomMessages = computed(() => chatStore.currentRoomMessages)
 const sortedCurrentRoomMessages = computed(() => 
-  [...currentRoomMessages.value].sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
+  [...currentRoomMessages.value]
+    .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
 )
+
 const isLoading = computed(() => chatStore.isLoading)
 const currentRoomName = computed(() => chatStore.currentRoomName)
 
